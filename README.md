@@ -113,3 +113,61 @@ Please include the following attribution when used:
 
 If you'd like to collaborate or extend this format,
 please reach out via GitHub Issues or Discussions.
+
+---
+
+## ⚠️ Version 1.1 Update (2025-10-15)
+segments section was removed for simplicity.
+Segment information is now inferred from each clause’s segment_id.
+Runtime applications may reconstruct segments_cache dynamically for playback or synchronization.
+ 
+**Before**
+| Section    | Description                                   |
+| ---------- | --------------------------------------------- |
+| `metadata` | File info such as language, duration, source  |
+| `segments` | Sentence-level units referencing clauses      |
+| `clauses`  | Phrase-level units containing word timestamps |
+
+**After 1.1**
+| Section                       | Description                                                            |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| `metadata`                    | File info such as language, duration, source                           |
+| `clauses`                     | Phrase-level units containing word timestamps and segment attribution  |
+| *(optional)* `segments_cache` | Runtime-only structure reconstructed from clauses (not stored in file) |
+
+#### Example(v1.1)
+```
+{
+  "pzf_version": "1.1",
+  "pzf_signature": "PeriOz_Format_v1.1_by_KosukeTachibana",
+  "metadata": {
+    "language": "ja",
+    "created_at": "2025-10-15T14:00:00",
+    "duration": 523.4,
+    "speaker_count": 2,
+    "source": "session_001.wav"
+  },
+  "clauses": [
+    {
+      "id": 0,
+      "segment_id": "S1",
+      "start": 0.0,
+      "end": 2.1,
+      "speaker": "A",
+      "text": "今日は天気が",
+      "words": [
+        {"word": "今日", "start": 0.0, "end": 0.6},
+        {"word": "は", "start": 0.6, "end": 0.8},
+        {"word": "天気", "start": 0.8, "end": 1.6},
+        {"word": "が", "start": 1.6, "end": 2.1}
+      ]
+    }
+  ]
+}
+```
+
+- Version: 1.1 (Official Release)
+	- Changelog:
+		- Removed redundant segments section
+		- Introduced segment_id field in each clause
+		- Added optional segments_cache for runtime reconstruction
